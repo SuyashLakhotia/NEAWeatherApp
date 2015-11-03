@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
                 final JSONObject NEA_PSI = RemoteFetch_NEA.fetchNEAData("psi_update");
                 final JSONObject OWM_forecast = RemoteFetch_OpenWeather.fetchOWMData(context);
 
-                if (NEA_nowcast == null || NEA_12hrs_forecast == null) {
+                if (NEA_nowcast == null || NEA_12hrs_forecast == null || NEA_PSI == null || OWM_forecast == null) {
                     handler.post(new Runnable() {
                         public void run() {
                             Toast.makeText(MainActivity.this, "Error in retrieving data.", Toast.LENGTH_LONG);
