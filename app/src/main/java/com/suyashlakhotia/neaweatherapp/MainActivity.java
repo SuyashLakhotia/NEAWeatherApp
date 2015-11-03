@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -21,13 +17,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
-import java.util.logging.SocketHandler;
+import java.util.Calendar;
 
 public class MainActivity extends Activity {
     Typeface weatherFont;
@@ -40,12 +34,12 @@ public class MainActivity extends Activity {
     Handler handler;
 
     public String[] temperatureString = new String[]{
-            "Now", "1PM", "2PM", "3PM", "32\u00b0C",
+            "Now", "1PM", "2PM", "3PM", "32°C",
             "32°C", "32°C", "32°C"};
 
     public static String[] psiString = new String[]{
-            "Now", "1PM", "2PM", "3PM", "108",
-            "108", "108", "108"};
+            "4PM", "5PM", "6PM", "Now", "1",
+            "1", "1", "1"};
 
     public static String[] getPSIString() {
         return psiString;
@@ -67,48 +61,6 @@ public class MainActivity extends Activity {
         weatherIcon.setTypeface(weatherFont);
 
         updateWeatherData();
-
-        //Setting temperature grid view
-        //uncomment the block below and edit
-        /*temperatureString[0] = "";
-        temperatureString[1] = "";
-        temperatureString[2] = "";
-        temperatureString[3] = "";
-        temperatureString[4] = "";
-        temperatureString[5] = "";
-        temperatureString[6] = "";
-        temperatureString[7] = ""; */
-
-        GridView temperatureGridView = (GridView) findViewById(R.id.TemperatureTimes);
-        ArrayAdapter<String> temperatureAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 0, 4));
-        temperatureGridView.setAdapter(temperatureAdapter);
-
-        GridView temperatureValueGridView = (GridView) findViewById(R.id.TemperatureValues);
-        ArrayAdapter<String> temperatureValueAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 4, 8));
-        temperatureValueGridView.setAdapter(temperatureValueAdapter);
-
-        //Setting PSI level grid view
-        //uncomment the block below to edit
-        /*psiString[0] = "";
-        psiString[1] = "";
-        psiString[2] = "";
-        psiString[3] = "";
-        psiString[4] = "";
-        psiString[5] = "";
-        psiString[6] = "";
-        psiString[7] = ""; */
-
-        GridView psiGridView = (GridView) findViewById(R.id.PSITimes);
-        ArrayAdapter<String> psiAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, Arrays.copyOfRange(psiString, 0, 4));
-        psiGridView.setAdapter(psiAdapter);
-
-        GridView psiValuesGridView = (GridView) findViewById(R.id.PSIValues);
-        ArrayAdapter<String> psiValuesAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, Arrays.copyOfRange(psiString, 4, 8));
-        psiValuesGridView.setAdapter(psiValuesAdapter);
     }
 
     private void updateWeatherData() {
@@ -116,6 +68,7 @@ public class MainActivity extends Activity {
             public void run() {
                 final JSONObject NEA_nowcast = RemoteFetch_NEA.fetchNEAData("nowcast");
                 final JSONObject NEA_12hrs_forecast = RemoteFetch_NEA.fetchNEAData("12hrs_forecast");
+                final JSONObject NEA_PSI = RemoteFetch_NEA.fetchNEAData("psi_update");
                 if (NEA_nowcast == null || NEA_12hrs_forecast == null) {
                     handler.post(new Runnable() {
                         public void run() {
@@ -125,7 +78,7 @@ public class MainActivity extends Activity {
                 } else {
                     handler.post(new Runnable() {
                         public void run() {
-                            renderWeather(NEA_nowcast, NEA_12hrs_forecast);
+                            renderHomeScreen(NEA_nowcast, NEA_12hrs_forecast, NEA_PSI);
                         }
                     });
                 }
@@ -133,10 +86,11 @@ public class MainActivity extends Activity {
         }.start();
     }
 
-    private void renderWeather(JSONObject NEA_nowcast, JSONObject NEA_12hrs_forecast) {
+    private void renderHomeScreen(JSONObject NEA_nowcast, JSONObject NEA_12hrs_forecast, JSONObject NEA_PSI) {
         try {
             JSONObject nowcastData = NEA_nowcast.getJSONObject("channel").getJSONObject("item").getJSONObject("weatherForecast").getJSONArray("area").getJSONObject(0);
             JSONObject metricsData = NEA_12hrs_forecast.getJSONObject("channel").getJSONObject("item");
+            JSONArray PSIData = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region");
 
             weatherDescriptor.setText(nowcastData.getString("forecast").trim());
             setWeatherIcon(nowcastData.getString("icon"));
@@ -149,8 +103,39 @@ public class MainActivity extends Activity {
             currentTemp.setText(tempAvg + "℃");
             currentHumidity.setText(metricsData.getJSONObject("relativeHumidity").getInt("high") + "%");
 
+            setTimeStrings();
+
+            GridView temperatureGridView = (GridView) findViewById(R.id.TemperatureTimes);
+            ArrayAdapter<String> temperatureAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 0, 4));
+            temperatureGridView.setAdapter(temperatureAdapter);
+
+            GridView temperatureValueGridView = (GridView) findViewById(R.id.TemperatureValues);
+            ArrayAdapter<String> temperatureValueAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 4, 8));
+            temperatureValueGridView.setAdapter(temperatureValueAdapter);
+
+            int psi[] = new int[4];
+            for (int i = 0; i < 4; i++) {
+                psi[i] = PSIData.getJSONObject(i).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
+                // Log.e("NEA PSI", Integer.toString(psi[i]));
+            }
+            for (int j = 0; j < 4; j++) {
+                psiString[j+4] = Integer.toString(psi[j]);
+            }
+
+            GridView psiGridView = (GridView) findViewById(R.id.PSITimes);
+            ArrayAdapter<String> psiAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, Arrays.copyOfRange(psiString, 0, 4));
+            psiGridView.setAdapter(psiAdapter);
+
+            GridView psiValuesGridView = (GridView) findViewById(R.id.PSIValues);
+            ArrayAdapter<String> psiValuesAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, Arrays.copyOfRange(psiString, 4, 8));
+            psiValuesGridView.setAdapter(psiValuesAdapter);
+
         } catch (Exception e) {
-            Log.e("SimpleWeatherApp", "One or more fields not found in the JSON data.");
+            Log.e("NEAWeatherApp", "One or more fields not found in the JSON data.");
         }
     }
 
@@ -194,6 +179,32 @@ public class MainActivity extends Activity {
         }
 
         weatherIcon.setText(icon);
+    }
+
+    private void setTimeStrings() {
+        Calendar c = Calendar.getInstance();
+        int x = c.get(Calendar.HOUR_OF_DAY);
+        int y = c.get(Calendar.AM_PM);
+
+        for (int j = 1; j < 4; j++) {
+            temperatureString[j] = Integer.toString(x + j);
+
+            if (y == 0) {
+                temperatureString[j] = temperatureString[j] + "AM";
+            } else {
+                temperatureString[j] = temperatureString[j] + "PM";
+            }
+        }
+
+        for (int k = 0; k < 3; k++) {
+            psiString[k] = Integer.toString(x - (3 - k));
+
+            if (y == 0) {
+                psiString[k] = psiString[k] + "AM";
+            } else {
+                psiString[k] = psiString[k] + "PM";
+            }
+        }
     }
 
     @Override
