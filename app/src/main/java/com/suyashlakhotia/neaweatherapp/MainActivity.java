@@ -105,6 +105,8 @@ public class MainActivity extends Activity {
 
             setTimeStrings();
 
+
+
             GridView temperatureGridView = (GridView) findViewById(R.id.TemperatureTimes);
             ArrayAdapter<String> temperatureAdapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 0, 4));
@@ -184,25 +186,49 @@ public class MainActivity extends Activity {
     private void setTimeStrings() {
         Calendar c = Calendar.getInstance();
         int x = c.get(Calendar.HOUR_OF_DAY);
-        int y = c.get(Calendar.AM_PM);
+        int y, hour;
 
         for (int j = 1; j < 4; j++) {
-            temperatureString[j] = Integer.toString(x + j);
+            hour = x + (j * 3);
+
+            if (hour > 12 && hour < 24) {
+                hour = hour % 12;
+                y = 1;
+            } else {
+                if (hour > 24) {
+                    hour = hour - 24;
+                } else if (hour == 24) {
+                    hour = 12;
+                }
+                y = 0;
+            }
 
             if (y == 0) {
-                temperatureString[j] = temperatureString[j] + "AM";
+                temperatureString[j] = Integer.toString(hour) + "AM";
             } else {
-                temperatureString[j] = temperatureString[j] + "PM";
+                temperatureString[j] = Integer.toString(hour) + "PM";
             }
         }
 
         for (int k = 0; k < 3; k++) {
-            psiString[k] = Integer.toString(x - (3 - k));
+            hour = x - ((3 - k) * 3);
+
+            if (hour > 12 && hour < 24) {
+                hour = hour % 12;
+                y = 1;
+            } else {
+                if (hour < 0) {
+                    hour = hour + 12;
+                    y = 1;
+                } else {
+                    y = 0;
+                }
+            }
 
             if (y == 0) {
-                psiString[k] = psiString[k] + "AM";
+                psiString[k] = Integer.toString(hour) + "AM";
             } else {
-                psiString[k] = psiString[k] + "PM";
+                psiString[k] = Integer.toString(hour) + "PM";
             }
         }
     }
