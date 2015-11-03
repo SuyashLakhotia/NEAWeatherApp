@@ -44,7 +44,7 @@ Recent Alerts List = RecentAlerts
                 <TextView
                     android:id="@+id/WeatherIcon"
                     android:layout_width="90dp"
-                    android:layout_height="75dp"
+                    android:layout_height="90dp"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="20dp"
                     android:textAppearance="?android:attr/textAppearanceLarge"
