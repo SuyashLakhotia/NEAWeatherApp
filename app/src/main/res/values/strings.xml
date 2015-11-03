@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">NEAWeatherApp</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="OpenWeather_key">13c4a79f88a2b417cb07a847330f81cc</string>
+
+    <string name="weather_fair">&#xf00d;</string>
+    <string name="weather_fair_night">&#xf02e;</string>
+    <string name="weather_partly_cloudy">&#xf002;</string>
+    <string name="weather_cloudy">&#xf013;</string>
+    <string name="weather_hazy">&#xf014;</string>
+    <string name="weather_windy">&#xf011;</string>
+    <string name="weather_rainy">&#xf019;</string>
+    <string name="weather_passing_showers">&#xf018;</string>
+    <string name="weather_showers">&#xf01a;</string>
+    <string name="weather_thundery_showers">&#xf01d;</string>
+    <string name="weather_na">&#xf07b;</string>
+
+    <string name="title_PSIScreen">PSI Level</string>
+    <string name="title_TempScreen">Temperature Forecast</string>
+    <string name="title_RecentScreen">Recent Alerts</string>
+</resources>

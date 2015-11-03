@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Temperature Scroll View = TemperatureScroll
+Close Button = temp_Close
+Time Picker = temp_TimePicker
+Show Temperature Button = temp_ShowTempButton
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <ScrollView
+        android:id="@+id/TemperatureScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".TemperatureForecastScreenActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/temp_Close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:onClick="closeTemp"
+                android:text="Close" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/verticalgradient"></View>
+
+            <TimePicker
+                android:id="@+id/temp_TimePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:timePickerMode="clock" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/verticalgradient"></View>
+
+            <Button
+                android:id="@+id/temp_ShowTempButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:onClick="showTemperatureForecast"
+                android:text="Show Temperature Forecast" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
