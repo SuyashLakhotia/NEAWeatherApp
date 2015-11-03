@@ -39,8 +39,7 @@
         <activity
             android:name=".TemperatureForecastScreenActivity"
             android:label="@string/title_TempScreen"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -48,8 +47,7 @@
         <activity
             android:name=".RecentAlertsScreenActivity"
             android:label="@string/title_RecentScreen"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
