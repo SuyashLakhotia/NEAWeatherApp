@@ -1,6 +1,7 @@
 package com.suyashlakhotia.neaweatherapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -33,6 +34,8 @@ public class MainActivity extends Activity {
 
     Handler handler;
 
+    private Context context;
+
     public String[] temperatureString = new String[]{
             "Now", "1PM", "2PM", "3PM", "32°C",
             "32°C", "32°C", "32°C"};
@@ -51,6 +54,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         handler = new Handler();
+        context = this;
 
         weatherIcon = (TextView) findViewById(R.id.WeatherIcon);
         weatherDescriptor = (TextView) findViewById(R.id.WeatherDescriptor);
@@ -69,6 +73,8 @@ public class MainActivity extends Activity {
                 final JSONObject NEA_nowcast = RemoteFetch_NEA.fetchNEAData("nowcast");
                 final JSONObject NEA_12hrs_forecast = RemoteFetch_NEA.fetchNEAData("12hrs_forecast");
                 final JSONObject NEA_PSI = RemoteFetch_NEA.fetchNEAData("psi_update");
+                final JSONObject OWM_forecast = RemoteFetch_OpenWeather.fetchOWMData(context);
+
                 if (NEA_nowcast == null || NEA_12hrs_forecast == null) {
                     handler.post(new Runnable() {
                         public void run() {
@@ -78,7 +84,7 @@ public class MainActivity extends Activity {
                 } else {
                     handler.post(new Runnable() {
                         public void run() {
-                            renderHomeScreen(NEA_nowcast, NEA_12hrs_forecast, NEA_PSI);
+                            renderHomeScreen(NEA_nowcast, NEA_12hrs_forecast, NEA_PSI, OWM_forecast);
                         }
                     });
                 }
@@ -86,26 +92,30 @@ public class MainActivity extends Activity {
         }.start();
     }
 
-    private void renderHomeScreen(JSONObject NEA_nowcast, JSONObject NEA_12hrs_forecast, JSONObject NEA_PSI) {
+    private void renderHomeScreen(JSONObject NEA_nowcast, JSONObject NEA_12hrs_forecast, JSONObject NEA_PSI, JSONObject OWM_forecast) {
         try {
             JSONObject nowcastData = NEA_nowcast.getJSONObject("channel").getJSONObject("item").getJSONObject("weatherForecast").getJSONArray("area").getJSONObject(0);
             JSONObject metricsData = NEA_12hrs_forecast.getJSONObject("channel").getJSONObject("item");
             JSONArray PSIData = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region");
+            JSONArray forecastData = OWM_forecast.getJSONArray("list");
 
+            // Weather Descriptor & Icon:
             weatherDescriptor.setText(nowcastData.getString("forecast").trim());
             setWeatherIcon(nowcastData.getString("icon"));
 
+            // Current Temperature & Humidity:
             int tempHigh, tempLow, tempAvg;
             tempHigh = metricsData.getJSONObject("temperature").getInt("high");
             tempLow = metricsData.getJSONObject("temperature").getInt("low");
             tempAvg = (tempHigh + tempLow) / 2;
-
             currentTemp.setText(tempAvg + "℃");
             currentHumidity.setText(metricsData.getJSONObject("relativeHumidity").getInt("high") + "%");
 
+            // Time Values:
             setTimeStrings();
 
-
+            // Temperature Forecast:
+            temperatureString[4] = Integer.toString(tempAvg);
 
             GridView temperatureGridView = (GridView) findViewById(R.id.TemperatureTimes);
             ArrayAdapter<String> temperatureAdapter = new ArrayAdapter<String>(this,
@@ -117,10 +127,10 @@ public class MainActivity extends Activity {
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 4, 8));
             temperatureValueGridView.setAdapter(temperatureValueAdapter);
 
+            // PSI History:
             int psi[] = new int[4];
             for (int i = 0; i < 4; i++) {
                 psi[i] = PSIData.getJSONObject(i).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
-                // Log.e("NEA PSI", Integer.toString(psi[i]));
             }
             for (int j = 0; j < 4; j++) {
                 psiString[j+4] = Integer.toString(psi[j]);
