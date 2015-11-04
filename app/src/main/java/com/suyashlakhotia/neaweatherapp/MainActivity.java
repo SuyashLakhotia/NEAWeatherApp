@@ -3,6 +3,7 @@ package com.suyashlakhotia.neaweatherapp;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -68,15 +69,14 @@ public class MainActivity extends Activity {
 
         updateWeatherData();
 
-        //Starting Notification Service
-        //Notification Service repeats every 10 secs
-        int timePeriod = 10 * 1000;
+        // Starting Notification Service
+        // Notification Service repeats every 10 secs
+        int timePeriod = 5 * 1000;
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(this, NotificationService.class);
         PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
         AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), timePeriod, pintent);
-
     }
 
     private void updateWeatherData() {
@@ -339,7 +339,6 @@ public class MainActivity extends Activity {
     }
 
     public void justifyListViewHeightBasedOnChildren(ListView listView) {
-
         ListAdapter adapter = listView.getAdapter();
 
         if (adapter == null) {
