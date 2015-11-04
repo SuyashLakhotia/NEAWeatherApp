@@ -94,12 +94,14 @@ public class TemperatureForecastScreenActivity extends Activity {
             int target_hour = tp.getCurrentHour();
             Calendar c = Calendar.getInstance();
             int cur_hour = c.get(Calendar.HOUR_OF_DAY);
-            int next_index, diff;
+            int cur_date = c.get(Calendar.DAY_OF_MONTH);
+            int next_index, diff, data_d;
 
             for (next_index = 0; next_index < 10; next_index++) {
                 diff = Integer.parseInt(forecastData.getJSONObject(next_index).getString("dt_txt").substring(11, 13)) - cur_hour;
+                data_d = Integer.parseInt(forecastData.getJSONObject(next_index).getString("dt_txt").substring(8, 10));
 
-                if (diff > 0) {
+                if (diff > 0 && data_d == cur_date) {
                     break;
                 }
             }

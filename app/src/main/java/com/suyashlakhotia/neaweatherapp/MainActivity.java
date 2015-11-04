@@ -147,12 +147,12 @@ public class MainActivity extends Activity {
             temperatureString[4] = Integer.toString(tempAvg) + "°C";
             int hours[] = new int[3];
             int tempVals[] = new int[3];
-            int diff;
-            int k;
+            int diff, data_d, k;
             int index = 0;
 
             Calendar c = Calendar.getInstance();
             int x = c.get(Calendar.HOUR_OF_DAY);
+            int d = c.get(Calendar.DAY_OF_MONTH);
 
             for (int j = 1; j < 4; j++) {
                 hours[j - 1] = x + (j * 3);
@@ -164,8 +164,9 @@ public class MainActivity extends Activity {
 
             for (k = 0; k < 10; k++) {
                 diff = Integer.parseInt(forecastData.getJSONObject(k).getString("dt_txt").substring(11, 13)) - x;
+                data_d = Integer.parseInt(forecastData.getJSONObject(k).getString("dt_txt").substring(8, 10));
 
-                if (diff > 0) {
+                if (diff > 0 && data_d == d) {
                     break;
                 }
             }
