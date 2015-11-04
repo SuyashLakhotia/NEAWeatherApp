@@ -99,11 +99,16 @@ public class MainActivity extends Activity {
             JSONArray PSIData = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region");
             JSONArray forecastData = OWM_forecast.getJSONArray("list");
 
-            // Weather Descriptor & Icon:
+            /*
+                Weather Descriptor & Icon:
+            */
             weatherDescriptor.setText(nowcastData.getString("forecast").trim());
             setWeatherIcon(nowcastData.getString("icon"));
 
-            // Current Temperature & Humidity:
+
+            /*
+                Current Temp & Humidity:
+            */
             int tempHigh, tempLow, tempAvg;
             tempHigh = metricsData.getJSONObject("temperature").getInt("high");
             tempLow = metricsData.getJSONObject("temperature").getInt("low");
@@ -111,11 +116,50 @@ public class MainActivity extends Activity {
             currentTemp.setText(tempAvg + "℃");
             currentHumidity.setText(metricsData.getJSONObject("relativeHumidity").getInt("high") + "%");
 
-            // Time Values:
+
+            /*
+                Time Values for Grids:
+            */
             setTimeStrings();
 
-            // Temperature Forecast:
-            temperatureString[4] = Integer.toString(tempAvg);
+
+            /*
+                Temperature Forecast Grid:
+            */
+            temperatureString[4] = Integer.toString(tempAvg) + "°C";
+            int hours[] = new int[3];
+            int tempVals[] = new int[3];
+            int diff;
+            int k;
+            int index = 0;
+
+            Calendar c = Calendar.getInstance();
+            int x = c.get(Calendar.HOUR_OF_DAY);
+
+            for (int j = 1; j < 4; j++) {
+                hours[j - 1] = x + (j * 3);
+
+                if (hours[j - 1] > 24) {
+                    hours[j - 1] = hours[j - 1] - 24;
+                }
+            }
+
+            for (k = 0; k < 10; k++) {
+                diff = Integer.parseInt(forecastData.getJSONObject(k).getString("dt_txt").substring(11, 12)) - x;
+
+                if (diff > 0) {
+                    break;
+                }
+            }
+
+            for (int l = k; l < (k + 3); l++) {
+                tempVals[index] = forecastData.getJSONObject(l).getJSONObject("main").getInt("temp");
+                index++;
+            }
+
+            for (int v = 0; v < 3; v++) {
+                temperatureString[v + 5] = Integer.toString(tempVals[v]) + "°C";
+            }
 
             GridView temperatureGridView = (GridView) findViewById(R.id.TemperatureTimes);
             ArrayAdapter<String> temperatureAdapter = new ArrayAdapter<String>(this,
@@ -127,13 +171,16 @@ public class MainActivity extends Activity {
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 4, 8));
             temperatureValueGridView.setAdapter(temperatureValueAdapter);
 
-            // PSI History:
+
+            /*
+                PSI History Grid:
+            */
             int psi[] = new int[4];
             for (int i = 0; i < 4; i++) {
                 psi[i] = PSIData.getJSONObject(i).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
             }
             for (int j = 0; j < 4; j++) {
-                psiString[j+4] = Integer.toString(psi[j]);
+                psiString[j + 4] = Integer.toString(psi[j]);
             }
 
             GridView psiGridView = (GridView) findViewById(R.id.PSITimes);
