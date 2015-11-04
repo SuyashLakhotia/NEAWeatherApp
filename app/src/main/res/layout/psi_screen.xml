@@ -35,7 +35,7 @@ Legend = psi_Legend
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:onClick="closePSI"
-                android:text="Close" />
+                android:text="ClOSE" />
 
 
             <View

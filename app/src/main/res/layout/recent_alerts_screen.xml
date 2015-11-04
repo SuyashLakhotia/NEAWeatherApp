@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:onClick="closeRecent"
-        android:text="Close"/>
+        android:text="CLOSE"/>
 
 
     <View

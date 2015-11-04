@@ -32,7 +32,7 @@ Show Temperature Button = temp_ShowTempButton
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:onClick="closeTemp"
-                android:text="Close" />
+                android:text="CLOSE" />
 
             <View
                 android:layout_width="match_parent"
