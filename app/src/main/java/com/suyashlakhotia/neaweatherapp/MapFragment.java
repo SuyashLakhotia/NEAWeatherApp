@@ -154,7 +154,7 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
 
     private void initCamera() {
         CameraPosition position = CameraPosition.builder()
-                .target(new LatLng(1.3500, 103.8000))
+                .target(new LatLng(1.345901, 103.822158))
                 .zoom(10f)
                 .bearing(0.0f)
                 .tilt(0.0f)
