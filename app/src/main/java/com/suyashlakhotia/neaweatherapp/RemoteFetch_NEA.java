@@ -37,7 +37,6 @@ public class RemoteFetch_NEA {
             return NEAData;
         } catch (Exception e) {
             Log.e("NEAWeatherApp", "Exception in fetching data from NEA Datasets.");
-            Log.e("NEAWeatherApp", e.getMessage());
             return null;
         }
     }
