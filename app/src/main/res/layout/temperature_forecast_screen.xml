@@ -46,13 +46,14 @@ Show Temperature Button = temp_ShowTempButton
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:timePickerMode="clock" />
+                android:timePickerMode="spinner" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/verticalgradient"></View>
+                android:background="@drawable/verticalgradient"
+                style="@android:style/Theme.Holo.Light.DarkActionBar"></View>
 
             <Button
                 android:id="@+id/temp_ShowTempButton"
