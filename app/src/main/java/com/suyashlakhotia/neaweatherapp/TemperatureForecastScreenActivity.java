@@ -115,10 +115,7 @@ public class TemperatureForecastScreenActivity extends Activity {
             for (next_index = 0; next_index < 10; next_index++) {
                 diff = Integer.parseInt(forecastData.getJSONObject(next_index).getString("dt_txt").substring(11, 13)) - cur_hour;
 
-                System.out.println(forecastData.getJSONObject(next_index).getString("dt_txt").substring(11, 13));
-
                 if (diff > 0) {
-                    System.out.println(next_index);
                     break;
                 }
             }
@@ -127,7 +124,6 @@ public class TemperatureForecastScreenActivity extends Activity {
                 diff = target_hour - Integer.parseInt(forecastData.getJSONObject(i).getString("dt_txt").substring(11, 13));
 
                 if (diff < 3 && diff >= 0) {
-                    System.out.println(i);
                     temp = Integer.toString(forecastData.getJSONObject(i).getJSONObject("main").getInt("temp"));
                     break;
                 }
