@@ -4,7 +4,9 @@
 Main Scroll View = MainScrollView
 Weather Icon = WeatherIcon
 Weather Descriptor = WeatherDescriptor
+Temperature Icon = TempIcon
 Current Temp = CurrentTemp
+Humidity Icon = HumidityIcon
 Current Humidity = CurrentHumidity
 <<Hardcoded>> "Temperature Forecast" = TempForecastTitle
 Temperature Times Grid = TemperatureTimes
@@ -48,26 +50,47 @@ Recent Alerts List = RecentAlerts
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="20dp"
                     android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAlignment="center"
                     android:textSize="75sp" />
 
                 <TextView
                     android:id="@+id/WeatherDescriptor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@+id/WeatherIcon"
                     android:textAlignment="center"
                     android:textAllCaps="true"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/TempIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/WeatherDescriptor"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/WeatherIcon"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 <TextView
                     android:id="@+id/CurrentTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/WeatherDescriptor"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@+id/WeatherIcon"
+                    android:layout_toRightOf="@+id/TempIcon"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/HumidityIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/WeatherDescriptor"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/CurrentTemp"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
@@ -75,9 +98,9 @@ Recent Alerts List = RecentAlerts
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/WeatherDescriptor"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@+id/CurrentTemp"
+                    android:layout_toRightOf="@+id/HumidityIcon"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
             </RelativeLayout>
 

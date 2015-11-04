@@ -16,6 +16,9 @@
     <string name="weather_thundery_showers">&#xf01d;</string>
     <string name="weather_na">&#xf07b;</string>
 
+    <string name="temp_icon">&#xf055;</string>
+    <string name="humidity_icon">&#xf07a;</string>
+
     <string name="title_PSIScreen">PSI Level</string>
     <string name="title_TempScreen">Temperature Forecast</string>
     <string name="title_RecentScreen">Recent Alerts</string>

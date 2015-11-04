@@ -32,7 +32,9 @@ public class MainActivity extends Activity {
 
     TextView weatherIcon;
     TextView weatherDescriptor;
+    TextView tempIcon;
     TextView currentTemp;
+    TextView humidityIcon;
     TextView currentHumidity;
 
     Handler handler;
@@ -57,11 +59,15 @@ public class MainActivity extends Activity {
 
         weatherIcon = (TextView) findViewById(R.id.WeatherIcon);
         weatherDescriptor = (TextView) findViewById(R.id.WeatherDescriptor);
+        tempIcon = (TextView) findViewById(R.id.TempIcon);
         currentTemp = (TextView) findViewById(R.id.CurrentTemp);
+        humidityIcon = (TextView) findViewById(R.id.HumidityIcon);
         currentHumidity = (TextView) findViewById(R.id.CurrentHumidity);
 
         weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weathericons-regular-webfont.ttf");
         weatherIcon.setTypeface(weatherFont);
+        tempIcon.setTypeface(weatherFont);
+        humidityIcon.setTypeface(weatherFont);
 
         // Fetches & Renders Data:
         updateWeatherData();
@@ -129,6 +135,8 @@ public class MainActivity extends Activity {
             tempAvg = (tempHigh + tempLow) / 2;
             currentTemp.setText(tempAvg + "℃");
             currentHumidity.setText(metricsData.getJSONObject("relativeHumidity").getInt("high") + "%");
+            tempIcon.setText(R.string.temp_icon);
+            humidityIcon.setText(R.string.humidity_icon);
 
 
             // Time Values for Grids:
