@@ -80,13 +80,7 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
     }
 
     private void initListeners() {
-        getMap().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-
-            public boolean onMarkerClick(Marker marker) {
-                onMapClick(marker.getPosition());
-                return false;
-            }
-        });
+        getMap().setOnMarkerClickListener(this);
         getMap().setOnMapLongClickListener(this);
         getMap().setOnInfoWindowClickListener(this);
         getMap().setOnMapClickListener(this);
@@ -170,6 +164,7 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
         getMap().getUiSettings().setRotateGesturesEnabled(false);
         getMap().getUiSettings().setScrollGesturesEnabled(false);
         getMap().getUiSettings().setZoomGesturesEnabled(false);
+        getMap().getUiSettings().setMapToolbarEnabled(false);
         getMap().setMapType(MAP_TYPES[1]);
     }
 
