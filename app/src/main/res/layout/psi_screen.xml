@@ -62,7 +62,8 @@ Legend = psi_Legend
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:numColumns="4" />
+                android:numColumns="4"
+                android:textAlignment="center" />
 
             <GridView
                 android:id="@+id/psi_PSIValues"
@@ -70,7 +71,8 @@ Legend = psi_Legend
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:numColumns="4" />
+                android:numColumns="4"
+                android:textAlignment="center" />
 
 
             <View

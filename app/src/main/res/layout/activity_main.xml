@@ -107,7 +107,8 @@ Recent Alerts List = RecentAlerts
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:numColumns="4" />
+                android:numColumns="4"
+                android:textAlignment="center" />
 
             <GridView
                 android:id="@+id/TemperatureValues"
@@ -115,7 +116,8 @@ Recent Alerts List = RecentAlerts
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:numColumns="4" />
+                android:numColumns="4"
+                android:textAlignment="center" />
 
             <View
                 android:layout_width="match_parent"
@@ -142,7 +144,8 @@ Recent Alerts List = RecentAlerts
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:numColumns="4" />
+                android:numColumns="4"
+                android:textAlignment="center" />
 
             <GridView
                 android:id="@+id/PSIValues"
@@ -150,7 +153,8 @@ Recent Alerts List = RecentAlerts
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:numColumns="4" />
+                android:numColumns="4"
+                android:textAlignment="center" />
 
             <View
                 android:layout_width="match_parent"
