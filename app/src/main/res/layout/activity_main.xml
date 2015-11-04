@@ -59,9 +59,8 @@ Recent Alerts List = RecentAlerts
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@+id/WeatherIcon"
-                    android:textAlignment="center"
                     android:textAllCaps="true"
-                    android:textSize="30sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/TempIcon"
