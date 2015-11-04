@@ -16,8 +16,7 @@ public class RecentAlertsDB {
     }
 
     public int insert(RecentAlerts recentAlerts) {
-
-        //Open connection to write data
+        // Open connection to write data
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(RecentAlerts.KEY_description, recentAlerts.description);
@@ -29,38 +28,30 @@ public class RecentAlertsDB {
         return (int) recentAlerts_Id;
     }
 
-    public void delete(int recentalerts_Id) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(RecentAlerts.TABLE, RecentAlerts.KEY_ID + "= ?", new String[] { String.valueOf(recentalerts_Id) });
-        db.close();
-    }
-
-
     public ArrayList<HashMap<String, String>> getAlertsList(int n) {
-        //Open connection to read only
+        // Open connection to read only
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery =  "SELECT * " +
+        String selectQuery = "SELECT * " +
                 " FROM " + RecentAlerts.TABLE;
 
-        ArrayList<HashMap<String, String>> alertsList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> alertsList = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
 
         if (cursor.moveToLast()) {
             do {
-                HashMap<String, String> alert = new HashMap<String, String>();
+                HashMap<String, String> alert = new HashMap<>();
                 alert.put("id", cursor.getString(cursor.getColumnIndex(RecentAlerts.KEY_ID)));
                 alert.put("description", cursor.getString(cursor.getColumnIndex(RecentAlerts.KEY_description)));
                 alert.put("title", cursor.getString(cursor.getColumnIndex(RecentAlerts.KEY_title)));
                 alertsList.add(alert);
                 n--;
-            } while (n>0 && cursor.moveToPrevious());
+            } while (n > 0 && cursor.moveToPrevious());
         }
 
         cursor.close();
         db.close();
         return alertsList;
     }
-
 }

@@ -3,7 +3,6 @@ package com.suyashlakhotia.neaweatherapp;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -11,8 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -43,16 +40,12 @@ public class MainActivity extends Activity {
     private Context context;
 
     public String[] temperatureString = new String[]{
-            "Now", "XPM", "XPM", "XPM", "100°C",
-            "100°C", "100°C", "100°C"};
+            "Now", "X", "X", "X",
+            "100°C", "100°C", "100°C", "100°C"};
 
     public static String[] psiString = new String[]{
-            "XPM", "XPM", "XPM", "Now", "1",
-            "1", "1", "1"};
-
-    public static String[] getPSIString() {
-        return psiString;
-    }
+            "X", "X", "X", "Now",
+            "-1", "-1", "-1", "-1"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,26 +63,24 @@ public class MainActivity extends Activity {
         weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weathericons-regular-webfont.ttf");
         weatherIcon.setTypeface(weatherFont);
 
+        // Fetches & Renders Data:
         updateWeatherData();
 
-        // Starting Notification Service
-        // Notification Service repeats every 10 secs
-        int timePeriod = 5 * 1000;
+        // Renders Recent Alerts List:
+        ListView listView = (ListView) findViewById(R.id.RecentAlerts);
+        RecentAlertsDB alertsDB = new RecentAlertsDB(this);
+        ArrayList<HashMap<String, String>> alertsList = alertsDB.getAlertsList(6);
+        ListAdapter adapter = new SimpleAdapter(this, alertsList, R.layout.list_view_element, new String[]{"id", "title"}, new int[]{R.id.alert_Id, R.id.alert_title});
+        listView.setAdapter(adapter);
+        justifyListViewHeightBasedOnChildren(listView);
+
+        // Notification Service:
+        int timePeriod = 5 * 1000; // Notification Service repeats every 5 seconds.
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(this, NotificationService.class);
         PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
         AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), timePeriod, pintent);
-
-        // Adding Recent Alerts List
-
-        ListView listView = (ListView) findViewById(R.id.RecentAlerts);
-        RecentAlertsDB alertsDB = new RecentAlertsDB(this);
-        ArrayList<HashMap<String, String>> alertsList =  alertsDB.getAlertsList(6);
-        ListAdapter adapter = new SimpleAdapter( this, alertsList, R.layout.list_view_element, new String[] {"id", "title"}, new int[] {R.id.alert_Id, R.id.alert_title});
-        listView.setAdapter(adapter);
-        justifyListViewHeightBasedOnChildren(listView);
-
     }
 
     private void updateWeatherData() {
@@ -103,7 +94,7 @@ public class MainActivity extends Activity {
                 if (NEA_nowcast == null || NEA_12hrs_forecast == null || NEA_PSI == null || OWM_forecast == null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(MainActivity.this, "Error in retrieving data.", Toast.LENGTH_LONG);
+                            Log.e("MainActivity", "updateWeatherData(): Error retrieving data.");
                         }
                     });
                 } else {
@@ -119,21 +110,19 @@ public class MainActivity extends Activity {
 
     private void renderHomeScreen(JSONObject NEA_nowcast, JSONObject NEA_12hrs_forecast, JSONObject NEA_PSI, JSONObject OWM_forecast) {
         try {
+            // Initialize all Data Streams:
             JSONObject nowcastData = NEA_nowcast.getJSONObject("channel").getJSONObject("item").getJSONObject("weatherForecast").getJSONArray("area").getJSONObject(0);
             JSONObject metricsData = NEA_12hrs_forecast.getJSONObject("channel").getJSONObject("item");
             JSONArray PSIData = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region");
             JSONArray forecastData = OWM_forecast.getJSONArray("list");
 
-            /*
-                Weather Descriptor & Icon:
-            */
+
+            // Weather Descriptor & Icon:
             weatherDescriptor.setText(nowcastData.getString("forecast").trim());
             setWeatherIcon(nowcastData.getString("icon"));
 
 
-            /*
-                Current Temp & Humidity:
-            */
+            // Current Temperature & Humidity:
             int tempHigh, tempLow, tempAvg;
             tempHigh = metricsData.getJSONObject("temperature").getInt("high");
             tempLow = metricsData.getJSONObject("temperature").getInt("low");
@@ -142,15 +131,11 @@ public class MainActivity extends Activity {
             currentHumidity.setText(metricsData.getJSONObject("relativeHumidity").getInt("high") + "%");
 
 
-            /*
-                Time Values for Grids:
-            */
+            // Time Values for Grids:
             setTimeStrings();
 
 
-            /*
-                Temperature Forecast Grid:
-            */
+            // Temperature Forecast Grid:
             temperatureString[4] = Integer.toString(tempAvg) + "°C";
             int hours[] = new int[3];
             int tempVals[] = new int[3];
@@ -187,19 +172,17 @@ public class MainActivity extends Activity {
             }
 
             GridView temperatureGridView = (GridView) findViewById(R.id.TemperatureTimes);
-            ArrayAdapter<String> temperatureAdapter = new ArrayAdapter<String>(this,
+            ArrayAdapter<String> temperatureAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 0, 4));
             temperatureGridView.setAdapter(temperatureAdapter);
 
             GridView temperatureValueGridView = (GridView) findViewById(R.id.TemperatureValues);
-            ArrayAdapter<String> temperatureValueAdapter = new ArrayAdapter<String>(this,
+            ArrayAdapter<String> temperatureValueAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(temperatureString, 4, 8));
             temperatureValueGridView.setAdapter(temperatureValueAdapter);
 
 
-            /*
-                PSI History Grid:
-            */
+            // PSI History Grid:
             int psi[] = new int[4];
             for (int i = 0; i < 4; i++) {
                 psi[i] = PSIData.getJSONObject(i).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
@@ -209,17 +192,16 @@ public class MainActivity extends Activity {
             }
 
             GridView psiGridView = (GridView) findViewById(R.id.PSITimes);
-            ArrayAdapter<String> psiAdapter = new ArrayAdapter<String>(this,
+            ArrayAdapter<String> psiAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(psiString, 0, 4));
             psiGridView.setAdapter(psiAdapter);
 
             GridView psiValuesGridView = (GridView) findViewById(R.id.PSIValues);
-            ArrayAdapter<String> psiValuesAdapter = new ArrayAdapter<String>(this,
+            ArrayAdapter<String> psiValuesAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(psiString, 4, 8));
             psiValuesGridView.setAdapter(psiValuesAdapter);
-
         } catch (Exception e) {
-            Log.e("NEAWeatherApp", "One or more fields not found in the JSON data.");
+            Log.e("MainActivity", "renderHomeScreen(): One or more fields not found in the JSON data.");
         }
     }
 
@@ -227,37 +209,37 @@ public class MainActivity extends Activity {
         String icon;
 
         switch (NEA_icon) {
-            case "FD":
+            case "FD": // Fair Day
                 icon = this.getString(R.string.weather_fair);
                 break;
-            case "FN":
+            case "FN": // Fair Night
                 icon = this.getString(R.string.weather_fair_night);
                 break;
-            case "PC":
+            case "PC": // Partly Cloudy
                 icon = this.getString(R.string.weather_partly_cloudy);
                 break;
-            case "CD":
+            case "CD": // Cloudy
                 icon = this.getString(R.string.weather_cloudy);
                 break;
-            case "HZ":
+            case "HZ": // Hazy
                 icon = this.getString(R.string.weather_hazy);
                 break;
-            case "WD":
+            case "WD": // Windy
                 icon = this.getString(R.string.weather_windy);
                 break;
-            case "RA":
+            case "RA": // Rainy
                 icon = this.getString(R.string.weather_rainy);
                 break;
-            case "PS":
+            case "PS": // Passing Showers
                 icon = this.getString(R.string.weather_passing_showers);
                 break;
-            case "SH":
+            case "SH": // Showers
                 icon = this.getString(R.string.weather_showers);
                 break;
-            case "TS":
+            case "TS": // Thunderstorm
                 icon = this.getString(R.string.weather_thundery_showers);
                 break;
-            default:
+            default: // Weather Data N/A
                 icon = this.getString(R.string.weather_na);
                 break;
         }
@@ -268,7 +250,8 @@ public class MainActivity extends Activity {
     private void setTimeStrings() {
         Calendar c = Calendar.getInstance();
         int x = c.get(Calendar.HOUR_OF_DAY);
-        int y, hour;
+        int y; // Flag for AM/PM. 1 = PM, 0 = AM.
+        int hour;
 
         for (int j = 1; j < 4; j++) {
             hour = x + (j * 3);
@@ -319,21 +302,28 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void justifyListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter adapter = listView.getAdapter();
+
+        if (adapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+        listView.setLayoutParams(par);
+        listView.requestLayout();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
+    public static String[] getPSIString() {
+        return psiString;
     }
 
     public void displayPSIScreen(View v) {
@@ -349,25 +339,5 @@ public class MainActivity extends Activity {
     public void displayRecentAlertsScreen(View v) {
         Intent intent = new Intent(this, RecentAlertsScreenActivity.class);
         startActivity(intent);
-    }
-
-    public void justifyListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter adapter = listView.getAdapter();
-
-        if (adapter == null) {
-            return;
-        }
-        ViewGroup vg = listView;
-        int totalHeight = 0;
-        for (int i = 0; i < adapter.getCount(); i++) {
-            View listItem = adapter.getView(i, null, vg);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams par = listView.getLayoutParams();
-        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
-        listView.setLayoutParams(par);
-        listView.requestLayout();
     }
 }

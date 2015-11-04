@@ -12,8 +12,7 @@ import java.net.URL;
 
 public class RemoteFetch_OpenWeather {
 
-    private static final String OPEN_WEATHER_MAP_API =
-            "http://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric";
+    private static final String OPEN_WEATHER_MAP_API = "http://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric";
 
     public static JSONObject fetchOWMData(Context context) {
         try {
@@ -31,14 +30,14 @@ public class RemoteFetch_OpenWeather {
 
             JSONObject data = new JSONObject(json.toString());
 
-            // This value will be 404 if the request was not successful.
             if (data.getInt("cod") != 200) {
-                Log.e("NEAWeatherApp","Error: OpenWeatherMap Data");
+                Log.e("RemoteFetch_OpenWeather", "fetchOWMData(): Error in fetching data from OpenWeatherMap.");
                 return null;
             }
 
             return data;
         } catch (Exception e) {
+            Log.e("RemoteFetch_NEA", "fetchOWMData(): Exception in fetching data from OpenWeatherMap.");
             return null;
         }
     }

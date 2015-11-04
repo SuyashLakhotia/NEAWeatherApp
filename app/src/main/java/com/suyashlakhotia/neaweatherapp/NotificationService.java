@@ -41,8 +41,8 @@ public class NotificationService extends Service {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public int onStartCommand(Intent intent, int flags,int startid) {
-        // if conditions for NOT notifying the user:
+    public int onStartCommand(Intent intent, int flags, int startid) {
+        // Fetch PSI Data from NEA:
         new Thread() {
             public void run() {
                 final JSONObject NEA_PSI = RemoteFetch_NEA.fetchNEAData("psi_update");
@@ -50,7 +50,7 @@ public class NotificationService extends Service {
                 if (NEA_PSI == null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, "Error in retrieving data.", Toast.LENGTH_LONG);
+                            Log.e("NotificationService", "onStartCommand(): Error retrieving data.");
                         }
                     });
                 } else {
@@ -63,20 +63,16 @@ public class NotificationService extends Service {
             }
         }.start();
 
-        // Below is the code for notifying the user:
+        // Notify User via Android Notifications:
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(notif_title)
                         .setContentText(notif_text)
                         .setDefaults(Notification.DEFAULT_ALL);
-        // Creates an explicit intent for the Recent Alerts Screen
         Intent resultIntent = new Intent(context, RecentAlertsScreenActivity.class);
-
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(RecentAlertsScreenActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
@@ -86,23 +82,20 @@ public class NotificationService extends Service {
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         mNotificationManager.notify(1, mBuilder.build());
 
         return START_STICKY;
     }
 
     private void setNotification(JSONObject NEA_PSI) {
-
         RecentAlertsDB alertsDB = new RecentAlertsDB(this);
-        //Generating Random Data to insert to database
         RecentAlerts recentAlerts = new RecentAlerts();
         int PSIVal = -1;
 
         try {
             PSIVal = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region").getJSONObject(1).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
         } catch (JSONException e) {
-            Log.e("NEAWeatherApp", "Error getting PSI data in NotificationService.");
+            Log.e("NotificationService", "setNotification(): One or more fields not found in the JSON data.");
         }
 
         if (PSIVal < 101) {

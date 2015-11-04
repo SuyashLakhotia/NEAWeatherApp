@@ -31,14 +31,13 @@ public class RemoteFetch_NEA {
             JSONObject NEAData = XML.toJSONObject(response.toString());
 
             if (con.getResponseCode() != 200) {
-                Log.e("NEAWeatherApp", "Error in fetching data from NEA Datasets.");
+                Log.e("RemoteFetch_NEA", "fetchNEAData(): Error in fetching data from NEA Datasets.");
             }
 
             return NEAData;
         } catch (Exception e) {
-            Log.e("NEAWeatherApp", "Exception in fetching data from NEA Datasets.");
+            Log.e("RemoteFetch_NEA", "fetchNEAData(): Exception in fetching data from NEA Datasets.");
             return null;
         }
     }
-
 }

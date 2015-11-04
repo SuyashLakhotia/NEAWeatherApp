@@ -30,7 +30,7 @@
             android:name=".PSIScreenActivity"
             android:label="@string/title_PSIScreen"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.suyashlakhotia.neaweatherapp.MainActivity" />
@@ -39,7 +39,7 @@
         <activity
             android:name=".TemperatureForecastScreenActivity"
             android:label="@string/title_TempScreen"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -47,7 +47,7 @@
         <activity
             android:name=".RecentAlertsScreenActivity"
             android:label="@string/title_RecentScreen"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -59,9 +59,9 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD979Uu1FgMpbmdY3Qnu3Q_aPCQnebjXr0"/>
+            android:value="AIzaSyD979Uu1FgMpbmdY3Qnu3Q_aPCQnebjXr0" />
 
-        <service android:name=".NotificationService"/>
+        <service android:name=".NotificationService" />
 
     </application>
 

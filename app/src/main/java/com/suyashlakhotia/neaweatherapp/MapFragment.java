@@ -1,16 +1,9 @@
 package com.suyashlakhotia.neaweatherapp;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -114,11 +107,11 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
                 final JSONObject NEA_PSI = RemoteFetch_NEA.fetchNEAData("psi_update");
 
                 if (NEA_PSI == null) {
-                    Log.e("NEAWeatherApp", "Error retrieving data.");
+                    Log.e("MapFragment", "fetchPSIData(): Error retrieving data.");
                 } else {
                     handler.post(new Runnable() {
                         public void run() {
-                            getMapPSIValues(NEA_PSI);
+                            setMapPSIValues(NEA_PSI);
                         }
                     });
                 }
@@ -126,7 +119,7 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
         }.start();
     }
 
-    private void getMapPSIValues(JSONObject NEA_PSI) {
+    private void setMapPSIValues(JSONObject NEA_PSI) {
         int vals[] = new int[5]; // NCEWS
 
         try {
@@ -148,7 +141,7 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
             setPSIMarker("West", psiLocation[3], 1.345901, 103.708236);
             setPSIMarker("South", psiLocation[4], 1.273726, 103.822158);
         } catch (JSONException e) {
-            Log.e("NEAWeatherApp", "One or more fields not found in the JSON data.");
+            Log.e("MapFragment", "setMapPSIValues(): One or more fields not found in the JSON data.");
         }
     }
 

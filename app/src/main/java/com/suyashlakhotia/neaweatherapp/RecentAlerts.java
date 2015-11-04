@@ -1,16 +1,15 @@
 package com.suyashlakhotia.neaweatherapp;
 
 public class RecentAlerts {
-    // Labels table name
+    // Table Name Label:
     public static final String TABLE = "RecentAlerts";
 
-    // Labels Table Columns names
+    // Table Fields Labels:
     public static final String KEY_ID = "id";
     public static final String KEY_description = "description";
     public static final String KEY_title = "title";
 
-    // property help us to keep data
-    public int alert_ID;
+    // Properties to help store data:
     public String description;
     public String title;
 }
