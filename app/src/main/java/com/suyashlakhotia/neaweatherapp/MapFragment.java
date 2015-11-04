@@ -177,29 +177,10 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
         LatLng latLng = new LatLng(lat, lng);
         MarkerOptions options = new MarkerOptions().position(latLng);
         options.title(title);
-        options.snippet(val);
-
-        //LayoutInflater inflater = (LayoutInflater) getActivity()
-        //        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        //View v = inflater.inflate(R.layout.googlemaps_marker, null);
-
-        //options.icon(BitmapDescriptorFactory.fromBitmap(loadBitmapFromView(v)));
+        options.snippet("PSI: " + val);
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.info28));
 
         getMap().addMarker(options);
-    }
-
-    public static Bitmap loadBitmapFromView(View v) {
-
-        if (v.getMeasuredHeight() <= 0) {
-            v.measure(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-            Bitmap b = Bitmap.createBitmap(v.getMeasuredWidth(), v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas(b);
-            v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-            v.draw(c);
-            return b;
-        }
-        return null;
     }
 
     @Override
