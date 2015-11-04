@@ -201,8 +201,10 @@ public class MainActivity extends Activity {
         for (int j = 1; j < 4; j++) {
             hour = x + (j * 3);
 
-            if (hour > 12 && hour < 24) {
-                hour = hour % 12;
+            if (hour > 11 && hour < 24) {
+                if (hour != 12) {
+                    hour = hour % 12;
+                }
                 y = 1;
             } else {
                 if (hour > 24) {
@@ -223,8 +225,10 @@ public class MainActivity extends Activity {
         for (int k = 0; k < 3; k++) {
             hour = x - ((3 - k) * 3);
 
-            if (hour > 12 && hour < 24) {
-                hour = hour % 12;
+            if (hour > 11 && hour < 24) {
+                if (hour != 12) {
+                    hour = hour % 12;
+                }
                 y = 1;
             } else {
                 if (hour < 0) {
