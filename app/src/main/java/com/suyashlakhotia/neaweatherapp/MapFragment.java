@@ -125,11 +125,11 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
         try {
             JSONArray PSIData = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region");
 
-            vals[0] = PSIData.getJSONObject(0).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
-            vals[1] = PSIData.getJSONObject(2).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
-            vals[2] = PSIData.getJSONObject(3).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
-            vals[3] = PSIData.getJSONObject(4).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
-            vals[4] = PSIData.getJSONObject(5).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
+            vals[0] = PSIData.getJSONObject(0).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
+            vals[1] = PSIData.getJSONObject(2).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
+            vals[2] = PSIData.getJSONObject(3).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
+            vals[3] = PSIData.getJSONObject(4).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
+            vals[4] = PSIData.getJSONObject(5).getJSONObject("record").getJSONArray("reading").getJSONObject(1).getInt("value");
 
             for (int i = 0; i < 5; i++) {
                 psiLocation[i] = Integer.toString(vals[i]);
