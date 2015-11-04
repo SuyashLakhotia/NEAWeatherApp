@@ -2,16 +2,15 @@ package com.suyashlakhotia.neaweatherapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,9 +24,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MapFragment extends SupportMapFragment implements GoogleApiClient.ConnectionCallbacks,
@@ -36,6 +35,10 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMarkerClickListener {
+
+    Handler handler;
+
+    public static String psiLocation[] = new String[5]; // NCEWS
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -81,7 +84,7 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
 
             public boolean onMarkerClick(Marker marker) {
                 onMapClick(marker.getPosition());
-                return true;
+                return false;
             }
         });
         getMap().setOnMapLongClickListener(this);
@@ -105,12 +108,54 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
 
     @Override
     public void onConnected(Bundle bundle) {
+        handler = new Handler();
+        fetchPSIData();
+
         initCamera();
-        setPsiMarker("West", 1.345901, 103.708236);
-        setPsiMarker("East", 1.345901, 103.936937);
-        setPsiMarker("Middle", 1.345901, 103.822158);
-        setPsiMarker("North", 1.428671, 103.822158);
-        setPsiMarker("South", 1.273726, 103.822158);
+    }
+
+    private void fetchPSIData() {
+        new Thread() {
+            public void run() {
+                final JSONObject NEA_PSI = RemoteFetch_NEA.fetchNEAData("psi_update");
+
+                if (NEA_PSI == null) {
+                    Log.e("NEAWeatherApp", "Error retrieving data.");
+                } else {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            getMapPSIValues(NEA_PSI);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    private void getMapPSIValues(JSONObject NEA_PSI) {
+        int vals[] = new int[5]; // NCEWS
+
+        try {
+            JSONArray PSIData = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region");
+
+            vals[0] = PSIData.getJSONObject(0).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
+            vals[1] = PSIData.getJSONObject(2).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
+            vals[2] = PSIData.getJSONObject(3).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
+            vals[3] = PSIData.getJSONObject(4).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
+            vals[4] = PSIData.getJSONObject(5).getJSONObject("record").getJSONArray("reading").getJSONObject(0).getInt("value");
+
+            for (int i = 0; i < 5; i++) {
+                psiLocation[i] = Integer.toString(vals[i]);
+            }
+
+            setPSIMarker("North", psiLocation[0], 1.428671, 103.822158);
+            setPSIMarker("Central", psiLocation[1], 1.345901, 103.822158);
+            setPSIMarker("East", psiLocation[2], 1.345901, 103.936937);
+            setPSIMarker("West", psiLocation[3], 1.345901, 103.708236);
+            setPSIMarker("South", psiLocation[4], 1.273726, 103.822158);
+        } catch (JSONException e) {
+            Log.e("NEAWeatherApp", "One or more fields not found in the JSON data.");
+        }
     }
 
     private void initCamera() {
@@ -128,16 +173,19 @@ public class MapFragment extends SupportMapFragment implements GoogleApiClient.C
         getMap().setMapType(MAP_TYPES[1]);
     }
 
-    private void setPsiMarker(String title, double lat, double lng) {
+    private void setPSIMarker(String title, String val, double lat, double lng) {
         LatLng latLng = new LatLng(lat, lng);
         MarkerOptions options = new MarkerOptions().position(latLng);
         options.title(title);
-        LayoutInflater inflater = (LayoutInflater) getActivity()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        options.snippet(val);
 
-        View v = inflater.inflate(R.layout.googlemaps_marker, null);
+        //LayoutInflater inflater = (LayoutInflater) getActivity()
+        //        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        options.icon(BitmapDescriptorFactory.fromBitmap(loadBitmapFromView(v)));
+        //View v = inflater.inflate(R.layout.googlemaps_marker, null);
+
+        //options.icon(BitmapDescriptorFactory.fromBitmap(loadBitmapFromView(v)));
+
         getMap().addMarker(options);
     }
 

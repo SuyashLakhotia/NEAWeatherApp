@@ -37,11 +37,11 @@ public class MainActivity extends Activity {
     private Context context;
 
     public String[] temperatureString = new String[]{
-            "Now", "1PM", "2PM", "3PM", "32°C",
-            "32°C", "32°C", "32°C"};
+            "Now", "XPM", "XPM", "XPM", "100°C",
+            "100°C", "100°C", "100°C"};
 
     public static String[] psiString = new String[]{
-            "4PM", "5PM", "6PM", "Now", "1",
+            "XPM", "XPM", "XPM", "Now", "1",
             "1", "1", "1"};
 
     public static String[] getPSIString() {
