@@ -93,6 +93,10 @@ public class NotificationService extends Service {
     }
 
     private void setNotification(JSONObject NEA_PSI) {
+
+        RecentAlertsDB alertsDB = new RecentAlertsDB(this);
+        //Generating Random Data to insert to database
+        RecentAlerts recentAlerts = new RecentAlerts();
         int PSIVal = -1;
 
         try {
@@ -107,6 +111,10 @@ public class NotificationService extends Service {
         } else {
             notif_title = "PSI Levels High";
             notif_text = "You're recommended to wear a mask or get indoors.";
+            recentAlerts.description = notif_text;
+            recentAlerts.title = notif_title;
+            alertsDB.insert(recentAlerts);
         }
+
     }
 }

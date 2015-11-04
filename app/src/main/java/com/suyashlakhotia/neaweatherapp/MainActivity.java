@@ -18,14 +18,17 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class MainActivity extends Activity {
     Typeface weatherFont;
@@ -77,6 +80,16 @@ public class MainActivity extends Activity {
         PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
         AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), timePeriod, pintent);
+
+        // Adding Recent Alerts List
+
+        ListView listView = (ListView) findViewById(R.id.RecentAlerts);
+        RecentAlertsDB alertsDB = new RecentAlertsDB(this);
+        ArrayList<HashMap<String, String>> alertsList =  alertsDB.getAlertsList(6);
+        ListAdapter adapter = new SimpleAdapter( this, alertsList, R.layout.list_view_element, new String[] {"id", "title"}, new int[] {R.id.alert_Id, R.id.alert_title});
+        listView.setAdapter(adapter);
+        justifyListViewHeightBasedOnChildren(listView);
+
     }
 
     private void updateWeatherData() {
@@ -157,7 +170,7 @@ public class MainActivity extends Activity {
             }
 
             for (k = 0; k < 10; k++) {
-                diff = Integer.parseInt(forecastData.getJSONObject(k).getString("dt_txt").substring(11, 12)) - x;
+                diff = Integer.parseInt(forecastData.getJSONObject(k).getString("dt_txt").substring(11, 13)) - x;
 
                 if (diff > 0) {
                     break;

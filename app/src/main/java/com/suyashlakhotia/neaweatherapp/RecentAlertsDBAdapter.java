@@ -23,7 +23,7 @@ public class RecentAlertsDBAdapter extends SQLiteOpenHelper {
         //All necessary tables you like to create will create here
         String CREATE_TABLE_ALERT = "CREATE TABLE " + RecentAlerts.TABLE  + "("
                 + RecentAlerts.KEY_ID  + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
-                + RecentAlerts.KEY_description + " TEXT )";
+                + RecentAlerts.KEY_title + " TEXT ,"+ RecentAlerts.KEY_description + " TEXT )";
 
         db.execSQL(CREATE_TABLE_ALERT);
     }
