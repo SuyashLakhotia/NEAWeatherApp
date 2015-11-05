@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -71,6 +74,12 @@ public class MainActivity extends Activity {
         tempIcon.setTypeface(weatherFont);
         humidityIcon.setTypeface(weatherFont);
 
+        // Check Internet Connectivity:
+        if (isNetworkAvailable() == false) {
+            Toast.makeText(this, "Please check your Internet connection and try again.", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
         // Display Progress Dialog:
         progress = ProgressDialog.show(context, "Loading Weather Data", "Please wait...", true);
 
@@ -92,6 +101,13 @@ public class MainActivity extends Activity {
         PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
         AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), timePeriod, pintent);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void updateWeatherData() {
