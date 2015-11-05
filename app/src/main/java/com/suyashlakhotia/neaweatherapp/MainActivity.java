@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
         justifyListViewHeightBasedOnChildren(listView);
 
         // Notification Service:
-        int timePeriod = 15 * 1000; // Notification Service repeats every 5 seconds.
+        int timePeriod = 60 * 60 * 1000; // Notification Service repeats every 1 hour.
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(this, NotificationService.class);
         PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
