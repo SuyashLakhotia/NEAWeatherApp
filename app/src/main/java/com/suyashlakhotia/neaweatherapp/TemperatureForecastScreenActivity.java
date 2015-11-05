@@ -20,11 +20,11 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 public class TemperatureForecastScreenActivity extends Activity {
-    private String temp = "X";
+    private String temp = "-";
     private Handler handler;
     private Context context;
 
-    TimePicker tp;
+    private TimePicker tp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +114,6 @@ public class TemperatureForecastScreenActivity extends Activity {
                     break;
                 }
             }
-
         } catch (JSONException e) {
             Log.e("TempForecastActivity", "getTempValue(): One or more fields not found in the JSON data.");
         }

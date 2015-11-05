@@ -3,6 +3,7 @@ package com.suyashlakhotia.neaweatherapp;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -17,7 +18,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,17 +37,19 @@ public class MainActivity extends Activity {
     TextView humidityIcon;
     TextView currentHumidity;
 
+    ProgressDialog progress;
+
     Handler handler;
 
     private Context context;
 
     public String[] temperatureString = new String[]{
-            "Now", "X", "X", "X",
-            "100°C", "100°C", "100°C", "100°C"};
+            "Now", "-", "-", "-",
+            "-°C", "-°C", "-°C", "-°C"};
 
     public static String[] psiString = new String[]{
-            "X", "X", "X", "Now",
-            "-1", "-1", "-1", "-1"};
+            "-", "-", "-", "Now",
+            "-", "-", "-", "-"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,9 @@ public class MainActivity extends Activity {
         weatherIcon.setTypeface(weatherFont);
         tempIcon.setTypeface(weatherFont);
         humidityIcon.setTypeface(weatherFont);
+
+        // Display Progress Dialog:
+        progress = ProgressDialog.show(context, "Loading Weather Data", "Please wait...", true);
 
         // Fetches & Renders Data:
         updateWeatherData();
@@ -209,6 +214,8 @@ public class MainActivity extends Activity {
             ArrayAdapter<String> psiValuesAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, Arrays.copyOfRange(psiString, 4, 8));
             psiValuesGridView.setAdapter(psiValuesAdapter);
+
+            progress.dismiss();
         } catch (Exception e) {
             Log.e("MainActivity", "renderHomeScreen(): One or more fields not found in the JSON data.");
         }
