@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
     private void renderHomeScreen(JSONObject NEA_nowcast, JSONObject NEA_12hrs_forecast, JSONObject NEA_PSI, JSONObject OWM_forecast) {
         try {
             // Initialize all Data Streams:
-            JSONObject nowcastData = NEA_nowcast.getJSONObject("channel").getJSONObject("item").getJSONObject("weatherForecast").getJSONArray("area").getJSONObject(0);
+            JSONObject nowcastData = NEA_nowcast.getJSONObject("channel").getJSONObject("item").getJSONObject("weatherForecast").getJSONArray("area").getJSONObject(14);
             JSONObject metricsData = NEA_12hrs_forecast.getJSONObject("channel").getJSONObject("item");
             JSONArray PSIData = NEA_PSI.getJSONObject("channel").getJSONObject("item").getJSONArray("region");
             JSONArray forecastData = OWM_forecast.getJSONArray("list");
