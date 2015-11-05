@@ -25,7 +25,7 @@ public class RecentAlertsScreenActivity extends Activity {
         RecentAlertsDB alertsDB = new RecentAlertsDB(this);
         ArrayList<HashMap<String, String>> alertsList = alertsDB.getAlertsList(20);
 
-        ListAdapter adapter = new SimpleAdapter(this, alertsList, R.layout.list_view_element, new String[]{"id", "title"}, new int[]{R.id.alert_Id, R.id.alert_title});
+        ListAdapter adapter = new SimpleAdapter(this, alertsList, R.layout.list_view_element, new String[]{"time", "title"}, new int[]{R.id.alert_timestamp, R.id.alert_title});
         listView.setAdapter(adapter);
     }
 

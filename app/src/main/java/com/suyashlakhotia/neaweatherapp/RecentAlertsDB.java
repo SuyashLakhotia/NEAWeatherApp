@@ -21,6 +21,7 @@ public class RecentAlertsDB {
         ContentValues values = new ContentValues();
         values.put(RecentAlerts.KEY_description, recentAlerts.description);
         values.put(RecentAlerts.KEY_title, recentAlerts.title);
+        values.put(RecentAlerts.KEY_timestamp, recentAlerts.timestamp);
 
         // Inserting Row
         long recentAlerts_Id = db.insert(RecentAlerts.TABLE, null, values);
@@ -45,6 +46,7 @@ public class RecentAlertsDB {
                 alert.put("id", cursor.getString(cursor.getColumnIndex(RecentAlerts.KEY_ID)));
                 alert.put("description", cursor.getString(cursor.getColumnIndex(RecentAlerts.KEY_description)));
                 alert.put("title", cursor.getString(cursor.getColumnIndex(RecentAlerts.KEY_title)));
+                alert.put("time", cursor.getString(cursor.getColumnIndex(RecentAlerts.KEY_timestamp)));
                 alertsList.add(alert);
                 n--;
             } while (n > 0 && cursor.moveToPrevious());

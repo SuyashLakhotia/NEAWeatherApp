@@ -13,12 +13,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class NotificationService extends Service {
     public Context context = this;
@@ -90,6 +90,9 @@ public class NotificationService extends Service {
     }
 
     private void setNotification(JSONObject NEA_PSI) {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
         RecentAlertsDB alertsDB = new RecentAlertsDB(this);
         RecentAlerts recentAlerts = new RecentAlerts();
         int PSIVal = -1;
@@ -108,6 +111,7 @@ public class NotificationService extends Service {
             notif_text = "You're recommended to wear a mask or get indoors.";
             recentAlerts.description = notif_text;
             recentAlerts.title = notif_title;
+            recentAlerts.timestamp = strDate;
             alertsDB.insert(recentAlerts);
         }
 
